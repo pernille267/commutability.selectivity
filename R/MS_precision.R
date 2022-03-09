@@ -8,7 +8,7 @@
 #' @examples MS_precision(MS_wise(sampled_cs_measurements)[Comparison=="MP1 - MP2",])
 
 MS_precision <- function(data){
-  data <- setDT(data)
+  data <- as.data.table(data)
   names <- names(data)[!names(data)%in%c("ReplicateID","MP_A","MP_B")]
   vars <- data[, .(Var_A = var(MP_A), Var_B = var(MP_B), Mean_A = mean(MP_A), Mean_B = mean(MP_B)),by=names]
   anal <- vars[, .(Var_A = mean(Var_A), Var_B = mean(Var_B), Mean_A = mean(Mean_A), Mean_B = mean(Mean_B))]
