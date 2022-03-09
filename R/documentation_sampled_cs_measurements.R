@@ -1,0 +1,17 @@
+#' Measurement results for 25 different clinical samples
+#'
+#' A data set containing the measurements based on five measurements systems done on 25 clinical samples measured in triplicate.
+#' For definitions, see the link below
+#'
+#' @format A data frame with 75 rows and 7 variables:
+#' \describe{
+#'   \item{SampleID}{The ID of the specific clinical sample}
+#'   \item{ReplicateID}{Based on a specific clinical sample, what is the replicate measurement ID}
+#'   \item{MP1}{Measurement results using measurement system number 1}
+#'   \item{MP2}{Measurement results using measurement system number 2}
+#'   \item{MP3}{Measurement results using measurement system number 3}
+#'   \item{MP4}{Measurement results using measurement system number 4}
+#'   \item{MP5}{Measurement results using measurement system number 5}
+#' }
+#' @source \url{https://www.bipm.org/en/home}
+"sampled_cs_measurements"
