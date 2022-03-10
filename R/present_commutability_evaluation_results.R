@@ -13,7 +13,7 @@
 #' @export
 #'
 #'
-#' @examples present_commutability_evaluation_results(data = sampled_cs_measurements, evaluated_materials = sampled_eqam_measurements, method = "DCE")
+#' @examples 1
 present_commutability_evaluation_results <- function(data, evaluated_materials, LFDT = FALSE, R = 3, level = 0.99, method = "DGF", success = "Commutable", failure = "Non-commutable"){
   data <- as.data.table(data)
   evaluated_materials <- as.data.table(evaluated_materials)
@@ -48,6 +48,7 @@ present_commutability_evaluation_results <- function(data, evaluated_materials, 
   dcast.data.table(data = cel, formula = SampleID ~ MPID, value.var = "Commutable for particular MS")
 }
 
+#present_commutability_evaluation_results(data = sampled_cs_measurements, evaluated_materials = sampled_eqam_measurements, method = "DCE")
 
 
 
