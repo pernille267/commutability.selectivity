@@ -19,4 +19,3 @@ resample_replicated_data <- function(data){
 }
 
 
-

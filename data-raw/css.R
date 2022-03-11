@@ -23,4 +23,4 @@ setnames(x = taus, old = c("ID1", "ID2"), new = c("SampleID", "ReplicateID"), sk
 sampled_cs_measurements <- taus
 
 usethis::use_data(sampled_cs_measurements, overwrite = TRUE, compress = "xz")
-usethis::use_r("sampled_cs_measurements")
+usethis::use_r("documentation_sampled_cs_measurements")

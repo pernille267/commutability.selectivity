@@ -13,27 +13,27 @@
 #' @export
 #'
 #'
-#' @examples 1
+#' @examples present_commutability_evaluation_results(data = sampled_cs_measurements, evaluated_materials = sampled_eqam_measurements, method = "DCE")
 present_commutability_evaluation_results <- function(data, evaluated_materials, LFDT = FALSE, R = 3, level = 0.99, method = "DGF", success = "Commutable", failure = "Non-commutable"){
   data <- as.data.table(data)
   evaluated_materials <- as.data.table(evaluated_materials)
   csl <- data
   eql <- evaluated_materials
   if(!LFDT){
-    csl <- MS_wise(data = data)
-    eql <- MS_wise(data = evaluated_materials)
+    csl <- MS_wise(data = csl)
+    eql <- MS_wise(data = eql)
   }
-  if(method == "DFG"){
+  if(method == "DGF"){
     cel <- Deming_Gillard_Fuller_over_groups(data = csl,
                                              level = level,
                                              R = R, Np = 1,
-                                             evaluated_materials = evaluated_materials)
+                                             evaluated_materials = eql)
   }
-  else if(method != "DFG"){
+  else if(method != "DGF"){
     cel <- Deming_CLSI_EP14_over_groups(data = csl,
                                         level = level,
                                         R = R, Np = 1,
-                                        evaluated_materials = evaluated_materials)
+                                        evaluated_materials = eql)
   }
   cel <- cel[,.(inside = MP_A > lwr & MP_A < upr),
              by = list(Comparison, SampleID)]
@@ -48,7 +48,6 @@ present_commutability_evaluation_results <- function(data, evaluated_materials, 
   dcast.data.table(data = cel, formula = SampleID ~ MPID, value.var = "Commutable for particular MS")
 }
 
-#present_commutability_evaluation_results(data = sampled_cs_measurements, evaluated_materials = sampled_eqam_measurements, method = "DCE")
 
 
 
