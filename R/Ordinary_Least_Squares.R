@@ -39,11 +39,11 @@ Ordinary_Least_Squares <- function(data, level = 0.99, R = 3, Np = 1e3, evaluate
   if(!is.null(evaluated_materials)){
     evaluated_materials <- as.data.table(evaluated_materials)
     evaluated_materials <- mean_of_replicates(evaluated_materials)
-    if(any(optimize_for_measurement_errors, lambda > 1)){
-      nx <- evaluated_materials$MP_B
+    if(all(optimize_for_measurement_errors, lambda < 1)){
+      nx <- evaluated_materials$MP_A
     }
     else{
-      nx <- evaluated_materials$MP_A
+      nx <- evaluated_materials$MP_B
     }
 
   }

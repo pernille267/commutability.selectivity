@@ -43,5 +43,5 @@ Estimate prediction band or prediction intervals using ordinary least squares re
 This function is not finished
 }
 \examples{
-print(1)
+Ordinary_Least_Squares_over_groups(MS_wise(sampled_cs_measurements), level = 0.99, evaluated_materials = MS_wise(sampled_eqam_measurements))
 }
