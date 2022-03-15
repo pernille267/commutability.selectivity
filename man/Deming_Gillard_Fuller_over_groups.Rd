@@ -23,7 +23,7 @@ Deming_Gillard_Fuller_over_groups(
 
 \item{R}{An integer signifying the maximum number of replicated measurements performed on each evaluated material}
 
-\item{Np}{An integer, which captures the number of pointwise prediction intervals making the prediction band across the concentration range. Not relevant is evaluated_materials are !NULL}
+\item{Np}{An integer, which captures the number of pointwise prediction intervals making the prediction band across the concentration range. Not relevant if evaluated_materials are !NULL}
 
 \item{evaluated_materials}{A data frame or data table with format LFDT enclosed with all replicated measurements for evaluated materials such as EQAMs or CRMs. Should be NULL if the PB, that is, pointwise prediction intervals to be estimated}
 

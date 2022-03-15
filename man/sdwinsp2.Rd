@@ -2,7 +2,7 @@
 % Please edit documentation in R/sdwinsp2.R
 \name{sdwinsp2}
 \alias{sdwinsp2}
-\title{Simulation of data with identical ns profiles}
+\title{Simulation of heteroscedastic data with identical non-selectivity profiles}
 \usage{
 sdwinsp2(
   n = "r",
@@ -17,7 +17,7 @@ sdwinsp2(
 \arguments{
 \item{n}{Integer or 'r' - number of unique samples}
 
-\item{R}{Integer or 'r' - number of unique samples}
+\item{R}{Integer or 'r' - number of unique replicated measurements of each sample}
 
 \item{cv_vec}{vector with two elements or 'r' - MS CVs in decimal}
 
@@ -27,16 +27,16 @@ sdwinsp2(
 
 \item{xi}{number that corresponds to ending SD respect to starting SD}
 
-\item{parameter_row}{A data frame or data table with only 1 row. Should contain a subset of simulation parameters}
+\item{parameter_row}{A data frame or data table with only 1 row. Should contain a subset of simulation parameters. Possible simulation parameters are n, R, cvx, cvy, ci_lwr and ci_upr, xi0, xi}
 }
 \value{
 A data table with 4 columns, two of which are measurement results from two MSs in comparison. In addition, n * R rows
 }
 \description{
-Simulation of data without non-selectivity but with heteroscedasticity. To be used in simulations
+Simulation of data with identical selectivity profiles, but with heteroscedasticity. To be used in simulations. Setting either simulation parameters to 'r' will invoke random generation of these numbers. Note that specifying parameters both outside and inside of parameter_row will make those parameters outside being overridden.
 }
 \details{
-Combine with lapply to simulate more than one data table. This function should only be used by advanced users. It is not user friendly for those not familiar with R
+Combine with \code{lapply()} or \code{sapply()} to simulate more than one data table. For parallel computing use \code{mc_sdwinsp2()}. This function should only be used by advanced users. It is not user friendly for those not familiar with R
 }
 \examples{
 sdwinsp2()

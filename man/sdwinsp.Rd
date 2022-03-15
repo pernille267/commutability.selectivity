@@ -21,10 +21,10 @@ sdwinsp(n = "r", R = "r", cv_vec = "r", ci = "r", parameter_row = c(1))
 A data table with 4 columns, two of which are measurement results from two MSs in comparison. In addition, n * R rows
 }
 \description{
-Simulation of data without non-selectivity. To be used in simulations
+Simulation of data with identical selectivity selectivity profiles. To be used in simulations. Setting either simulation parameters to 'r' will invoke random generation of these numbers. Note that specifying parameters both outside and inside of parameter_row will make those parameters outside being overridden.
 }
 \details{
-Combine with lapply to simulate more than one data table. This function should only be used by advanced users. It is not user friendly for those not familiar with R
+Combine with \code{lapply()} or \code{sapply()} to simulate more than one data table. For parallel computing use \code{mc_sdwinsp()}. This function should only be used by advanced users. It is not user friendly for those not familiar with R
 }
 \examples{
 sdwinsp()
