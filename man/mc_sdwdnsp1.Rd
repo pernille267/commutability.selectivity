@@ -12,7 +12,8 @@ mc_sdwdnsp1(
   cv_vec = "r",
   ci = "r",
   mmax = 2.5,
-  p = 0.05
+  p = 0.05,
+  parallel = TRUE
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ mc_sdwdnsp1(
 \item{mmax}{A number signifying the maximum multiple of relocation of clinical samples affected by differences in selectivity}
 
 \item{p}{A number signifying the average proportion of clinical samples to be relocated}
+
+\item{parallel}{allow parallelization}
 }
 \value{
 A list of simulated data tables with 4 columns, where two of which are measurement results from two MSs in comparison having differences in selectivity profiles. In addition, n * R rows
