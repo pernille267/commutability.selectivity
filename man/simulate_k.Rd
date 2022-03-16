@@ -4,7 +4,13 @@
 \alias{simulate_k}
 \title{Simulate k values based on simulation function}
 \usage{
-simulate_k(m = 100, method = "sdwinsp", parameters, to_dt = TRUE)
+simulate_k(
+  m = 100,
+  method = "sdwinsp",
+  parameters,
+  to_dt = TRUE,
+  parallel = TRUE
+)
 }
 \arguments{
 \item{m}{The number of simulated k values for each row of \code{parameters}}

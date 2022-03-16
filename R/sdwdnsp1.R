@@ -20,7 +20,6 @@
 
 sdwdnsp1 <- function(n = "r", R = "r", cv_vec = "r", ci = "r", mmax = 2.5, p = 0.05, parameter_row = c(1), include_relocated = FALSE){
   cidomain <- sample(x=c(1e-1,1,2,3,5),size=1,prob=c(0.30,0.30,0.20,0.10,0.10))
-
   if(any(names(parameter_row) == "n")){
     n <- parameter_row$n
   }
@@ -134,7 +133,6 @@ sdwdnsp1 <- function(n = "r", R = "r", cv_vec = "r", ci = "r", mmax = 2.5, p = 0
               Relocation = sample(x=c(-1,0,1),size=1,prob=c(p,1-2*p,p)) * runif(1,0,mmax*(sdy^2 + sdx^2)) / sqrt(2),
               MP_A = MP_A,
               MP_B = MP_B), by = SampleID]
-  print(dt)
   if(include_relocated){
     dt <- dt[,.(ReplicateID = ReplicateID,
                 Relocated = Relocation != 0,

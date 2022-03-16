@@ -5,12 +5,14 @@
 \title{Simulate several data sets with identical non-selectivity profiles using parallel computation}
 \usage{
 mc_sdwinsp(
-  parameter_row = c(1),
+  parameter_row = c(2),
   m = 100,
   n = "r",
   R = "r",
   cv_vec = "r",
-  ci = "r"
+  ci = "r",
+  parallel = FALSE,
+  progress_bar = TRUE
 )
 }
 \arguments{
@@ -25,6 +27,10 @@ mc_sdwinsp(
 \item{cv_vec}{Vector with two elements or 'r' - MS CVs in decimal}
 
 \item{ci}{Vector with two elements or 'r' - Concentration interval}
+
+\item{parallel}{Should we allow parallel computing to be performed when simulating from \code{sdwinsp()}. This is not recommended if the number of parameter combinations is larger than 10. Default value is FALSE}
+
+\item{progress_bar}{Should a progress bar monitoring the simulation progress be displayed. Default is TRUE}
 }
 \value{
 A list containing m data tables with 4 columns, two of which are measured results from two MSs in comparison. In addition, n * R rows.

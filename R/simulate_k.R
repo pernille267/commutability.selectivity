@@ -12,69 +12,167 @@
 #'
 #' @examples simulate_k(m = 1e3, method = 3, parameters = data.frame(n = c(20,30), R = c(3, 3), p = c(0.05, 0.05), mmax = c(5,5)), to_dt = TRUE)
 
-simulate_k <- function(m = 100, method = "sdwinsp", parameters, to_dt = TRUE){
+simulate_k <- function(m = 100, method = "sdwinsp", parameters, to_dt = TRUE, parallel = TRUE){
   parameters_reference <- as.data.table(parameters)[,`parameter combination id`:=as.character(1:nrow(.SD))]
   parameters <- split(x = parameters_reference, f = 1:nrow(parameters_reference))
   if(any(method == "sdwinsp", method==1)){
-    simulated_data <- lapply(X = parameters, FUN = mc_sdwinsp, m = m)
-    simulated_data <- lapply(X = simulated_data, FUN = rbindlist, idcol = "simulation id internal")
-    simulated_k_values <- lapply(X = simulated_data, FUN = estimate_k_over_groups, groups = "simulation id internal")
-    if(to_dt){
-      simulated_k_values <- rbindlist(l = simulated_k_values, idcol = "parameter combination id")
-      return(merge.data.table(x = parameters_reference, y = simulated_k_values, by = "parameter combination id"))
+    if(parallel){
+      cl <- makeCluster(detectCores() - 1)
+      clusterEvalQ(cl = cl, expr = library(commutability.selectivity))
+      message("simulating data ...")
+      simulated_data <- pblapply(X = parameters, FUN = mc_sdwinsp, m = m, cl = cl, parallel = all(!parallel,length(parameters)<10,m>5e4), progress_bar = FALSE)
+      simulated_data <- lapply(X = simulated_data, FUN = rbindlist, idcol = "simulation id internal")
+      message("calculating k values based on simulated data ...")
+      simulated_k_values <- pblapply(X = simulated_data, FUN = estimate_k_over_groups, groups = "simulation id internal", cl = cl)
+      if(to_dt){
+        simulated_k_values <- rbindlist(l = simulated_k_values, idcol = "parameter combination id")
+        on.exit(expr = stopCluster(cl = cl), add = TRUE)
+        return(merge.data.table(x = parameters_reference, y = simulated_k_values, by = "parameter combination id"))
+      }
+      else{
+        on.exit(expr = stopCluster(cl = cl), add = TRUE)
+        return(list(k_values = simulated_k_values, parameters_lookup = parameters_reference))
+      }
     }
     else{
-      return(list(k_values = simulated_k_values, parameters_lookup = parameters_reference))
+      simulated_data <- lapply(X = parameters, FUN = mc_sdwinsp, m = m, parallel = all(!parallel,length(parameters)<10,m>5e4), progress_bar = FALSE)
+      simulated_data <- lapply(X = simulated_data, FUN = rbindlist, idcol = "simulation id internal")
+      simulated_k_values <- lapply(X = simulated_data, FUN = estimate_k_over_groups, groups = "simulation id internal")
+      if(to_dt){
+        simulated_k_values <- rbindlist(l = simulated_k_values, idcol = "parameter combination id")
+        return(merge.data.table(x = parameters_reference, y = simulated_k_values, by = "parameter combination id"))
+      }
+      else{
+        return(list(k_values = simulated_k_values, parameters_lookup = parameters_reference))
+      }
     }
   }
   else if(any(method == "sdwinsp2", method==2)){
-    simulated_data <- lapply(X = parameters, FUN = mc_sdwinsp2, m = m)
-    simulated_data <- lapply(X = simulated_data, FUN = rbindlist, idcol = "simulation id internal")
-    simulated_k_values <- lapply(X = simulated_data, FUN = estimate_k_over_groups, groups = "simulation id internal")
-    if(to_dt){
-      simulated_k_values <- rbindlist(l = simulated_k_values, idcol = "parameter combination id")
-      return(merge.data.table(x = parameters_reference, y = simulated_k_values, by = "parameter combination id"))
+    if(parallel){
+      cl <- makeCluster(detectCores() - 1)
+      clusterEvalQ(cl = cl, expr = library(commutability.selectivity))
+      message("simulating data ...")
+      simulated_data <- pblapply(X = parameters, FUN = mc_sdwinsp2, m = m, cl = cl, parallel = all(!parallel,length(parameters)<10,m>5e4), progress_bar = FALSE)
+      simulated_data <- lapply(X = simulated_data, FUN = rbindlist, idcol = "simulation id internal")
+      message("calculating k values based on simulated data ...")
+      simulated_k_values <- pblapply(X = simulated_data, FUN = estimate_k_over_groups, groups = "simulation id internal", cl = cl)
+      if(to_dt){
+        simulated_k_values <- rbindlist(l = simulated_k_values, idcol = "parameter combination id")
+        on.exit(expr = stopCluster(cl = cl), add = TRUE)
+        return(merge.data.table(x = parameters_reference, y = simulated_k_values, by = "parameter combination id"))
+      }
+      else{
+        on.exit(expr = stopCluster(cl = cl), add = TRUE)
+        return(list(k_values = simulated_k_values, parameters_lookup = parameters_reference))
+      }
     }
     else{
-      return(list(k_values = simulated_k_values, parameters_lookup = parameters_reference))
+      simulated_data <- lapply(X = parameters, FUN = mc_sdwinsp2, m = m, parallel = all(!parallel,length(parameters)<10,m>5e4), progress_bar = FALSE)
+      simulated_data <- lapply(X = simulated_data, FUN = rbindlist, idcol = "simulation id internal")
+      simulated_k_values <- lapply(X = simulated_data, FUN = estimate_k_over_groups, groups = "simulation id internal")
+      if(to_dt){
+        simulated_k_values <- rbindlist(l = simulated_k_values, idcol = "parameter combination id")
+        return(merge.data.table(x = parameters_reference, y = simulated_k_values, by = "parameter combination id"))
+      }
+      else{
+        return(list(k_values = simulated_k_values, parameters_lookup = parameters_reference))
+      }
     }
   }
   else if(any(method == "sdwdnsp1", method==3)){
-    simulated_data <- lapply(X = parameters, FUN = mc_sdwdnsp1, m = m)
-    simulated_data <- lapply(X = simulated_data, FUN = rbindlist, idcol = "simulation id internal")
-    simulated_k_values <- lapply(X = simulated_data, FUN = estimate_k_over_groups, groups = "simulation id internal")
-    if(to_dt){
-      simulated_k_values <- rbindlist(l = simulated_k_values, idcol = "parameter combination id")
-      return(merge.data.table(x = parameters_reference, y = simulated_k_values, by = "parameter combination id"))
+    if(parallel){
+      cl <- makeCluster(detectCores() - 1)
+      clusterEvalQ(cl = cl, expr = library(commutability.selectivity))
+      message("simulating data ...")
+      simulated_data <- pblapply(X = parameters, FUN = mc_sdwdnsp1, m = m, cl = cl, parallel = all(!parallel,length(parameters)<10,m>5e4), progress_bar = FALSE)
+      simulated_data <- lapply(X = simulated_data, FUN = rbindlist, idcol = "simulation id internal")
+      message("calculating k values based on simulated data ...")
+      simulated_k_values <- pblapply(X = simulated_data, FUN = estimate_k_over_groups, groups = "simulation id internal", cl = cl)
+      if(to_dt){
+        simulated_k_values <- rbindlist(l = simulated_k_values, idcol = "parameter combination id")
+        on.exit(expr = stopCluster(cl = cl), add = TRUE)
+        return(merge.data.table(x = parameters_reference, y = simulated_k_values, by = "parameter combination id"))
+      }
+      else{
+        on.exit(expr = stopCluster(cl = cl), add = TRUE)
+        return(list(k_values = simulated_k_values, parameters_lookup = parameters_reference))
+      }
     }
     else{
-      return(list(k_values = simulated_k_values, parameters_lookup = parameters_reference))
+      simulated_data <- lapply(X = parameters, FUN = mc_sdwdnsp1, m = m, parallel = all(!parallel,length(parameters)<10,m>5e4), progress_bar = FALSE)
+      simulated_data <- lapply(X = simulated_data, FUN = rbindlist, idcol = "simulation id internal")
+      simulated_k_values <- lapply(X = simulated_data, FUN = estimate_k_over_groups, groups = "simulation id internal")
+      if(to_dt){
+        simulated_k_values <- rbindlist(l = simulated_k_values, idcol = "parameter combination id")
+        return(merge.data.table(x = parameters_reference, y = simulated_k_values, by = "parameter combination id"))
+      }
+      else{
+        return(list(k_values = simulated_k_values, parameters_lookup = parameters_reference))
+      }
     }
   }
   else if(any(method == "sdwdnsp2", method==4)){
-    simulated_data <- lapply(X = parameters, FUN = mc_sdwdnsp2, m = m)
-    simulated_data <- lapply(X = simulated_data, FUN = rbindlist, idcol = "simulation id internal")
-    simulated_k_values <- lapply(X = simulated_data, FUN = estimate_k_over_groups, groups = "simulation id internal")
-    if(to_dt){
-      simulated_k_values <- rbindlist(l = simulated_k_values, idcol = "parameter combination id")
-      return(merge.data.table(x = parameters_reference, y = simulated_k_values, by = "parameter combination id"))
+    if(parallel){
+      cl <- makeCluster(detectCores() - 1)
+      clusterEvalQ(cl = cl, expr = library(commutability.selectivity))
+      message("simulating data ...")
+      simulated_data <- pblapply(X = parameters, FUN = mc_sdwdnsp2, m = m, cl = cl, parallel = all(!parallel,length(parameters)<10,m>5e4), progress_bar = FALSE)
+      simulated_data <- lapply(X = simulated_data, FUN = rbindlist, idcol = "simulation id internal")
+      message("calculating k values based on simulated data ...")
+      simulated_k_values <- pblapply(X = simulated_data, FUN = estimate_k_over_groups, groups = "simulation id internal", cl = cl)
+      if(to_dt){
+        simulated_k_values <- rbindlist(l = simulated_k_values, idcol = "parameter combination id")
+        on.exit(expr = stopCluster(cl = cl), add = TRUE)
+        return(merge.data.table(x = parameters_reference, y = simulated_k_values, by = "parameter combination id"))
+      }
+      else{
+        on.exit(expr = stopCluster(cl = cl), add = TRUE)
+        return(list(k_values = simulated_k_values, parameters_lookup = parameters_reference))
+      }
     }
     else{
-      return(list(k_values = simulated_k_values, parameters_lookup = parameters_reference))
+      simulated_data <- lapply(X = parameters, FUN = mc_sdwdnsp2, m = m, parallel = all(!parallel,length(parameters)<10,m>5e4), progress_bar = FALSE)
+      simulated_data <- lapply(X = simulated_data, FUN = rbindlist, idcol = "simulation id internal")
+      simulated_k_values <- lapply(X = simulated_data, FUN = estimate_k_over_groups, groups = "simulation id internal")
+      if(to_dt){
+        simulated_k_values <- rbindlist(l = simulated_k_values, idcol = "parameter combination id")
+        return(merge.data.table(x = parameters_reference, y = simulated_k_values, by = "parameter combination id"))
+      }
+      else{
+        return(list(k_values = simulated_k_values, parameters_lookup = parameters_reference))
+      }
     }
   }
   else{
-    simulated_data <- lapply(X = parameters, FUN = mc_sdwinsp, m = m)
-    simulated_data <- lapply(X = simulated_data, FUN = rbindlist, idcol = "simulation id internal")
-    simulated_k_values <- lapply(X = simulated_data, FUN = estimate_k_over_groups, groups = "simulation id internal")
-    if(to_dt){
-      simulated_k_values <- rbindlist(l = simulated_k_values, idcol = "parameter combination id")
-      message("input method is not recongnized. 'sdwinsp' is used. If you do not want this, you need to make sure your input matches the requirement. See ?simulate_k for details")
-      return(merge.data.table(x = parameters_reference, y = simulated_k_values, by = "parameter combination id"))
+    if(parallel){
+      cl <- makeCluster(detectCores() - 1)
+      clusterEvalQ(cl = cl, expr = library(commutability.selectivity))
+      message("simulating data from sdwinsp because no valid method are chosen ...")
+      simulated_data <- pblapply(X = parameters, FUN = mc_sdwinsp, m = m, cl = cl, parallel = all(!parallel,length(parameters)<10,m>5e4), progress_bar = FALSE)
+      simulated_data <- lapply(X = simulated_data, FUN = rbindlist, idcol = "simulation id internal")
+      message("calculating k values based on simulated data ...")
+      simulated_k_values <- pblapply(X = simulated_data, FUN = estimate_k_over_groups, groups = "simulation id internal", cl = cl)
+      if(to_dt){
+        simulated_k_values <- rbindlist(l = simulated_k_values, idcol = "parameter combination id")
+        on.exit(expr = stopCluster(cl = cl), add = TRUE)
+        return(merge.data.table(x = parameters_reference, y = simulated_k_values, by = "parameter combination id"))
+      }
+      else{
+        on.exit(expr = stopCluster(cl = cl), add = TRUE)
+        return(list(k_values = simulated_k_values, parameters_lookup = parameters_reference))
+      }
     }
     else{
-      message("input method is not recongnized. 'sdwinsp' is used. If you do not want this, you need to make sure your input matches the requirement. See ?simulate_k for details")
-      return(list(k_values = simulated_k_values, parameters_lookup = parameters_reference))
+      simulated_data <- lapply(X = parameters, FUN = mc_sdwinsp, m = m, parallel = all(!parallel,length(parameters)<10,m>5e4), progress_bar = FALSE)
+      simulated_data <- lapply(X = simulated_data, FUN = rbindlist, idcol = "simulation id internal")
+      simulated_k_values <- lapply(X = simulated_data, FUN = estimate_k_over_groups, groups = "simulation id internal")
+      if(to_dt){
+        simulated_k_values <- rbindlist(l = simulated_k_values, idcol = "parameter combination id")
+        return(merge.data.table(x = parameters_reference, y = simulated_k_values, by = "parameter combination id"))
+      }
+      else{
+        return(list(k_values = simulated_k_values, parameters_lookup = parameters_reference))
+      }
     }
   }
 }

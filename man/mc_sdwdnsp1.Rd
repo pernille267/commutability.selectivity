@@ -13,7 +13,8 @@ mc_sdwdnsp1(
   ci = "r",
   mmax = 2.5,
   p = 0.05,
-  parallel = TRUE
+  parallel = TRUE,
+  progress_bar = TRUE
 )
 }
 \arguments{
@@ -33,17 +34,19 @@ mc_sdwdnsp1(
 
 \item{p}{A number signifying the average proportion of clinical samples to be relocated}
 
-\item{parallel}{allow parallelization}
+\item{parallel}{should we allow parallelization to be performed}
+
+\item{progress_bar}{should a progress bar be displayed. Default is TRUE}
 }
 \value{
 A list of simulated data tables with 4 columns, where two of which are measurement results from two MSs in comparison having differences in selectivity profiles. In addition, n * R rows
 }
 \description{
-Simulate several data sets with different non-selectivity profiles defined by setting 1 using parallel computation
+Performance; 100 - TT 2 sec TF 2 sec FT 0.25 sec FF 0.15 sec, 1,000 - TT 3.9 sec TF 2.3 sec FT 2.1 sec FF 1.7 sec, 10,000 TT 8.1 sec TF 6 sec FT 18 sec FF 17.5 sec
 }
 \details{
-this function is recommended to use when simulating more than 350 data sets, or else it will be faster to just use standard \code{sapply()}
+\code{parallel} should only be TRUE used if parameter_row has few rows, or else it will be faster to just use standard \code{sapply()} by setting \code{parallel} to FALSE. the latter is true if subsets of rows are simulated in parallel. This function is not available for other users than Windows.
 }
 \examples{
-mc_sdwdnsp1()
+mc_sdwdnsp1(m = 100, parallel = FALSE, progress_bar = TRUE)
 }

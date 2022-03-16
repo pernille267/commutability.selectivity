@@ -4,9 +4,11 @@
 \alias{sdwinsp}
 \title{Simulation of data with identical ns profiles}
 \usage{
-sdwinsp(n = "r", R = "r", cv_vec = "r", ci = "r", parameter_row = c(1))
+sdwinsp(parameter_row = c(1), n = "r", R = "r", cv_vec = "r", ci = "r")
 }
 \arguments{
+\item{parameter_row}{A data frame or data table with only 1 row. Should contain a subset of simulation parameters}
+
 \item{n}{Integer or 'r' - number of unique samples}
 
 \item{R}{Integer or 'r' - number of unique samples}
@@ -14,8 +16,6 @@ sdwinsp(n = "r", R = "r", cv_vec = "r", ci = "r", parameter_row = c(1))
 \item{cv_vec}{vector with two elements or 'r' - MS CVs in decimal}
 
 \item{ci}{vector with two elements or 'r' - Concentration interval}
-
-\item{parameter_row}{A data frame or data table with only 1 row. Should contain a subset of simulation parameters}
 }
 \value{
 A data table with 4 columns, two of which are measurement results from two MSs in comparison. In addition, n * R rows

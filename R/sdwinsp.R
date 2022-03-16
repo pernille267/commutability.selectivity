@@ -14,9 +14,8 @@
 #' @export
 #'
 #' @examples sdwinsp()
-sdwinsp <- function(n = "r", R = "r", cv_vec = "r", ci = "r", parameter_row = c(1)){
+sdwinsp <- function(parameter_row = c(1), n = "r", R = "r", cv_vec = "r", ci = "r"){
   cidomain <- sample(x=c(1e-1,1,2,3,5),size=1,prob=c(0.30,0.30,0.20,0.10,0.10))
-
   if(any(names(parameter_row) == "n")){
     n <- parameter_row$n
   }
@@ -72,7 +71,7 @@ sdwinsp <- function(n = "r", R = "r", cv_vec = "r", ci = "r", parameter_row = c(
   if(any(names(parameter_row) == "ci_lwr")){
     ci_lwr <- parameter_row$ci_lwr
   }
-  else if(ci == "r"){
+  else if(ci[1] == "r"){
     ci_lwr <- runif(1,0,1e2) * cidomain
   }
   else if(is.double(ci[1])){
@@ -85,14 +84,14 @@ sdwinsp <- function(n = "r", R = "r", cv_vec = "r", ci = "r", parameter_row = c(
   if(any(names(parameter_row) == "ci_upr")){
     ci_upr <- parameter_row$ci_upr
   }
-  else if(ci == "r"){
+  else if(ci[1] == "r"){
     ci_upr <- ci_lwr + runif(1,0,1e2) * cidomain
   }
   else if(is.double(ci[2])){
     ci_upr <- ci[2]
   }
   else{
-    ci_upr <- 100
+    ci_upr <- 100 + ci_lwr
   }
 
   tau <- runif(n = n, min = ci_lwr, max = ci_upr)
