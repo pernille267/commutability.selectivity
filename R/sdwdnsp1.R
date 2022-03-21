@@ -130,7 +130,7 @@ sdwdnsp1 <- function(n = "r", R = "r", cv_vec = "r", ci = "r", mmax = 2.5, p = 0
                      MP_A = rnorm(R, tau, sdy),
                      MP_B = rnorm(R, tau, sdx)), by = SampleID]
   dt <- dt[,.(ReplicateID = ReplicateID,
-              Relocation = sample(x=c(-1,0,1),size=1,prob=c(p,1-2*p,p)) * runif(1,0,mmax*(sdy^2 + sdx^2)) / sqrt(2),
+              Relocation = sample(x=c(-1,0,1),size=1,prob=c(p,1-2*p,p)) * runif(1,0,mmax*sqrt(sdy^2 + sdx^2)) / sqrt(2),
               MP_A = MP_A,
               MP_B = MP_B), by = SampleID]
   if(include_relocated){

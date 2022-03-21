@@ -23,20 +23,20 @@ mc_sdwdnsp2 <- function(parameter_row = c(1), m = 1e2, n = "r", R = "r", cv_vec 
     cl <- makeCluster(detectCores() - 1)
     clusterEvalQ(cl = cl, expr = library(commutability.selectivity))
     if(progress_bar){
-      mcs <- pbsapply(cl = cl, X = 1:m, FUN = sdwdnsp2, n = n, R = R, cv_vec = cv_vec, ci = ci, mmax = mmax, q = q, parameter_row = parameter_row, simplify = FALSE)
+      mcs <- pblapply(cl = cl, X = as.list(1:m), FUN = sdwdnsp2, n = n, R = R, cv_vec = cv_vec, ci = ci, mmax = mmax, q = q, parameter_row = parameter_row)
     }
     else{
-      mcs <- parSapply(cl = cl, X = 1:m, FUN = sdwdnsp2, n = n, R = R, cv_vec = cv_vec, ci = ci, mmax = mmax, q = q, parameter_row = parameter_row, simplify = FALSE)
+      mcs <- parLapply(cl = cl, X = as.list(1:m), FUN = sdwdnsp2, n = n, R = R, cv_vec = cv_vec, ci = ci, mmax = mmax, q = q, parameter_row = parameter_row)
     }
     on.exit(expr = stopCluster(cl=cl), add = TRUE)
     return(mcs)
   }
   else{
     if(progress_bar){
-      mcs <- pbsapply(X = 1:m, FUN = sdwdnsp2, n = n, R = R, cv_vec = cv_vec, ci = ci, mmax = mmax, q = q, parameter_row = parameter_row, simplify = FALSE)
+      mcs <- pblapply(X = as.list(1:m), FUN = sdwdnsp2, n = n, R = R, cv_vec = cv_vec, ci = ci, mmax = mmax, q = q, parameter_row = parameter_row)
     }
     else{
-      mcs <- sapply(X = 1:m, FUN = sdwdnsp2, n = n, R = R, cv_vec = cv_vec, ci = ci, mmax = mmax, q = q, parameter_row = parameter_row, simplify = FALSE)
+      mcs <- lapply(X = as.list(1:m), FUN = sdwdnsp2, n = n, R = R, cv_vec = cv_vec, ci = ci, mmax = mmax, q = q, parameter_row = parameter_row)
     }
     return(mcs)
   }

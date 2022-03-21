@@ -15,11 +15,13 @@ simulate_k(
 \arguments{
 \item{m}{The number of simulated k values for each row of \code{parameters}}
 
-\item{method}{The name of the function of type mc_* that you want to simulate k with. Allowed methods are \code{sdwinsp} (default), \code{sdwinsp2}, \code{sdwdnsp1}, \code{sdwdnsp2}, or 1, 2, 3, 4 respectively}
+\item{method}{The name of the function of type mc_* that you want to simulate k with. Allowed methods are \code{sdwinsp} (default), \code{sdwinsp2}, \code{sdwdnsp1}, \code{sdwdnsp2}, \code{sdwdnsp3}, or 1, 2, 3, 4, 5 respectively}
 
 \item{parameters}{A data table or data frame where each row include a set of parameters. To generate a data table of unique combinations for a set of vectors of parameters it may be used to employ \code{CJ()} from the \code{data.table} package}
 
 \item{to_dt}{If TRUE resulting k values are gathered into an data table}
+
+\item{parallel}{If TRUE, parallel computing will be used for each parameter combination instead of each iterations per parameter combination}
 }
 \value{
 A list or data table consisting of simulated k values based on generic parameters such as n, R, etc., and method dependent parameters. If \code{to_dt} is TRUE, the parameters found in \code{parameters} will be attached to the output data table

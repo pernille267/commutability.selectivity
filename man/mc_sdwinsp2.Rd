@@ -12,7 +12,9 @@ mc_sdwinsp2(
   cv_vec = "r",
   ci = "r",
   xi0 = 1,
-  xi = 2
+  xi = 2,
+  parallel = FALSE,
+  progress_bar = TRUE
 )
 }
 \arguments{
@@ -28,9 +30,13 @@ mc_sdwinsp2(
 
 \item{ci}{Vector with two elements or 'r' - Concentration interval}
 
-\item{xi0}{A number signifying the relative starting value to the base. Default is 1}
+\item{xi0}{A number signifying the relative starting value to the base. Default is 1 and should be smaller than \code{xi}}
 
-\item{xi}{A number signifying the relative ending value relative to the base. Default is 2}
+\item{xi}{A number signifying the relative ending value relative to the base. Default is 2 and should be larger than \code{xi0}}
+
+\item{parallel}{Logical - Should computations be performed in parallel or not. Default is \code{FALSE} and is not recommended unless m > 1e5}
+
+\item{progress_bar}{Logical - Should a progress bar tracking the progress of the simulations be displayed? Default is \code{TRUE}}
 }
 \value{
 A list containing m simulated data tables with 4 columns, two of which are measured results from two MSs in comparison. In addition, n * R rows.
@@ -39,7 +45,7 @@ A list containing m simulated data tables with 4 columns, two of which are measu
 Simulate several data sets with identical non-selectivity profiles using parallel computation
 }
 \details{
-this function is recommended to use when simulating more than 500 data sets, or else it will be faster to just use standard sapply
+Simulates m data sets with identical selectivity profiles, but with heteroscedasticity. The ratio of parameters \code{xi} and \code{xi0} indicates the relative increase of standard deviation of measurement errors from the lower end of the concentration range to the upper.
 }
 \examples{
 mc_sdwinsp2(m = 50, xi0 = 1, xi = 3)

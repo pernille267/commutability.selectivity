@@ -76,7 +76,7 @@ sdwdnsp2 <- function(n = "r", R = "r", cv_vec = "r", ci = "r", mmax = 2.5, q = c
   if(any(names(parameter_row) == "ci_lwr")){
     ci_lwr <- parameter_row$ci_lwr
   }
-  else if(ci == "r"){
+  else if(ci[1] == "r"){
     ci_lwr <- runif(1,0,1e2) * cidomain
   }
   else if(is.double(ci[1])){
@@ -89,7 +89,7 @@ sdwdnsp2 <- function(n = "r", R = "r", cv_vec = "r", ci = "r", mmax = 2.5, q = c
   if(any(names(parameter_row) == "ci_upr")){
     ci_upr <- parameter_row$ci_upr
   }
-  else if(ci == "r"){
+  else if(ci[1] == "r"){
     ci_upr <- ci_lwr + runif(1,0,1e2) * cidomain
   }
   else if(is.double(ci[2])){
@@ -134,26 +134,26 @@ sdwdnsp2 <- function(n = "r", R = "r", cv_vec = "r", ci = "r", mmax = 2.5, q = c
   tau <- rep(tau, each = R)
   rids <- rep(1:R, times = n)
   sids <- rep(1:n, each = R)
-  sdx <- sum(c(ci_lwr,ci_upr))/2 * cvx
-  sdy <- sum(c(ci_lwr,ci_upr))/2 * cvy
+  sdx <- (sum(c(ci_lwr,ci_upr))/2) * cvx
+  sdy <- (sum(c(ci_lwr,ci_upr))/2) * cvy
   dir <- sample(x=c(1,-1),size=1)
   dt <- list("SampleID" = sids, "ReplicateID" = rids, "tau" = tau)
   dt <- setDT(dt)[, influenced := tau <= quantile(x = tau, probs = q[2], na.rm = TRUE, names = FALSE) & tau >= quantile(x = tau, probs = q[1], na.rm = TRUE, names = FALSE)]
   dt <- dt[,.(ReplicateID = ReplicateID,
               influenced = influenced,
-              Relocation = dir * runif(1, 0, mmax * (sdy**2 + sdx**2)) / sqrt(2),
+              Relocation = influenced * dir * runif(1, 0, mmax * sqrt(sdy**2 + sdx**2)) / sqrt(2),
               MP_A = rnorm(R,tau,sdy),
               MP_B = rnorm(R,tau,sdx)), by = SampleID]
   if(include_relocated){
     dt <- dt[,.(ReplicateID = ReplicateID,
                 Relocated = influenced == TRUE,
-                MP_A = MP_A + Relocation * influenced,
-                MP_B = MP_A - Relocation * influenced), by = SampleID]
+                MP_A = MP_A + Relocation,
+                MP_B = MP_B - Relocation), by = SampleID]
   }
   else{
     dt <- dt[,.(ReplicateID = ReplicateID,
                 MP_A = MP_A + Relocation * influenced,
-                MP_B = MP_A - Relocation * influenced), by = SampleID]
+                MP_B = MP_B - Relocation * influenced), by = SampleID]
   }
   return(dt)
 }
