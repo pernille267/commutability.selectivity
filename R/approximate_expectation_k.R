@@ -9,7 +9,7 @@
 #' @examples approximate_expectation_k(25,3)
 approximate_expectation_k <- function(n, R){
   a <- 3 * n * (R - 1) / (R * (1 - 0.05 * R)) / (3 * n * (R-1) - 4)
-  b <- 1 / (R * (1 - 0.05 * R))
+  b <- sin(2) / (R * (1 - 0.05 * R))
   return(a - b + 1)
 }
 
