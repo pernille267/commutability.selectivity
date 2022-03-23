@@ -2,7 +2,7 @@
 % Please edit documentation in R/mean_of_replicates.R
 \name{mean_of_replicates}
 \alias{mean_of_replicates}
-\title{Calculate mean of replicates over Sample IDs and possibly other grouping columns}
+\title{Calculate mean of replicates over Sample IDs and possibly other grouping columns if they exist}
 \usage{
 mean_of_replicates(data)
 }
@@ -14,6 +14,9 @@ A data table with format LFDT where replicated measurements are collapsed to mea
 }
 \description{
 Calculate mean of replicates based on \code{data}. Note that the three columns \code{ReplicateID}, \code{MP_A} and \code{MP_B} must be part of \code{data} for this function to work properly. The grouping columns may have any name, but it is recommended to stick to standard names such as SampleID or Comparison
+}
+\details{
+If the column displaying replicate IDs are named something else than \code{ReplicateID}, it will be approximately matched, but there is no guarantee that this will work
 }
 \examples{
 mean_of_replicates(data = MS_wise(sampled_eqam_measurements)[Comparison=="MP1 - MP2",])

@@ -16,4 +16,5 @@ Imports:
     stringi,
     data.table,
     pbapply,
-    parallel
+    parallel,
+    stringdist

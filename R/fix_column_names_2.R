@@ -33,7 +33,7 @@ fix_column_names_2 <- function(data, n_ids = 3, LFDT = FALSE, MOR = FALSE, slack
     sid <- 1
     rid <- 2
   }
-  else if(all(n_ids == 2, !LFDT, MOR)){
+  else if(all(n_ids == 1, !LFDT, MOR)){
     sid <- 1
   }
   else{
@@ -43,24 +43,25 @@ fix_column_names_2 <- function(data, n_ids = 3, LFDT = FALSE, MOR = FALSE, slack
   accepted_sample_id_names <- c("sampleid","csid","clinicalsampleid","patient","cs","cid","sample","clinid","patientid","sampl","sam","pasient","prøve","prøveid","pasientid")
   accepted_replicate_id_names <- c("replicateid","rid","replicates","replicate","replicatesid","rep","repl","replic","repeatid","repid","replicat","replikatid","replikat","vid")
 
-  sufficently_close_matches <- list("Comparison" = NA, "SampleID" = NA, "ReplicateID" = NA)
+  sufficiently_close_matches <- list("Comparison" = NA, "SampleID" = NA, "ReplicateID" = NA)
   matching_messages <- list("Comparison match(es) with lookup:" = "No good matches for comparison id column",
                             "SampleID match(es) with lookup:" = "No good matches for sample id column",
                             "ReplicateID match(es) with lookup:" = "No good matches for replicate id column")
   closest_sampleid <- grab(x = accepted_sample_id_names, pattern = x[sid], maxDist = slack, value = TRUE)
+
   if(length(closest_sampleid)>0){
     if(length(closest_sampleid)<=3){
       matching_messages[[2]] <- stri_c(closest_sampleid, collapse = ", ")
     }
-    else{
+    else if(length(closest_sampleid)>3){
       closest_sampleid <- closest_sampleid[1:4]
       matching_messages[[2]] <- stri_c(c(closest_sampleid, "..."), collapse = ", ")
     }
 
-    sufficently_close_matches[[2]] <- TRUE
+    sufficiently_close_matches[[2]] <- TRUE
   }
   else{
-    sufficently_close_matches[[2]] <- NA
+    sufficiently_close_matches[[2]] <- NA
   }
   if(LFDT){
     closest_comparison <- grab(x = accepted_comparison_id_names, pattern = x[cid], maxDist = slack, value = TRUE)
@@ -72,10 +73,10 @@ fix_column_names_2 <- function(data, n_ids = 3, LFDT = FALSE, MOR = FALSE, slack
         closest_comparison <- closest_comparison[1:4]
         matching_messages[[1]] <- stri_c(c(closest_comparison, "..."), collapse = ", ")
       }
-      sufficently_close_matches[[1]] <- TRUE
+      sufficiently_close_matches[[1]] <- TRUE
     }
     else{
-      sufficently_close_matches[[1]] <- NA
+      sufficiently_close_matches[[1]] <- NA
     }
   }
 
@@ -89,10 +90,10 @@ fix_column_names_2 <- function(data, n_ids = 3, LFDT = FALSE, MOR = FALSE, slack
         closest_replicateid <- closest_replicateid[1:4]
         matching_messages[[3]] <- stri_c(c(closest_replicateid,"..."), collapse = ", ")
       }
-      sufficently_close_matches[[3]] <- TRUE
+      sufficiently_close_matches[[3]] <- TRUE
     }
     else{
-      sufficently_close_matches[[3]] <- NA
+      sufficiently_close_matches[[3]] <- NA
     }
   }
   if(print_matches){
@@ -101,8 +102,9 @@ fix_column_names_2 <- function(data, n_ids = 3, LFDT = FALSE, MOR = FALSE, slack
                                                                "Sample ID column matches the following from LT:  ",
                                                                "Replicate ID column matches the following from LT:  "))
   }
-  valid_names <- stri_replace_na(str = unlist(sufficently_close_matches), replacement = FALSE)
-  names_to_be_included <- names(sufficently_close_matches)[valid_names]
+
+  valid_names <- stri_replace_na(str = unlist(sufficiently_close_matches), replacement = FALSE)
+  names_to_be_included <- names(sufficiently_close_matches)[which(valid_names==TRUE)]
   names(data)[1:n_ids] <- names_to_be_included
   return(data)
 }

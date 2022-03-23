@@ -15,9 +15,18 @@ mean_of_replicates_2 <- function(data, other_ids = NULL){
     data <- data[, lapply(X = .SD, fun = mean), .SDcols = MS_columns, by = c("SampleID")]
     return(data)
   }
-  else{
+  else if(all(c("SampleID", "ReplicateID")%in%data)){
     MS_columns <- names(data)[!names(data) %in% c("SampleID", "ReplicateID",other_ids)]
     data <- data[, lapply(X = .SD, fun = mean), .SDcols = MS_columns, by = c("SampleID", other_ids)]
     return(data)
+  }
+  else if(!is.null(other_ids)){
+    main_id <- other_ids[1]
+    MS_columns <- names(data)[!names(data) %in% other_ids]
+    data <- data[, lapply(X = .SD, fun = mean), .SDcols = MS_columns, by = main_id]
+    return(data)
+  }
+  else{
+    stop("SampleID and ReplicateID not found in data, and no specified grouping variables found in other_ids to make up for this")
   }
 }
