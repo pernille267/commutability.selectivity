@@ -2,20 +2,18 @@
 % Please edit documentation in R/mean_of_replicates.R
 \name{mean_of_replicates}
 \alias{mean_of_replicates}
-\title{Calculate mean of replicates based on grouping}
+\title{Calculate mean of replicates over Sample IDs and possibly other grouping columns}
 \usage{
-mean_of_replicates(data, IDs = c("Comparison", "SampleID"))
+mean_of_replicates(data)
 }
 \arguments{
-\item{data}{A data frame or data table with format LFDT where all replicated measurements are enclosed}
-
-\item{IDs}{The names of the grouping columns of the data. The column of replicate IDs must not be part of these names}
+\item{data}{A data frame or data table with format LFDT where all replicated measurements are enclosed. If \code{Data} is on WFDT, you must use \code{mean_of_replicates_2()} instead}
 }
 \value{
 A data table with format LFDT where replicated measurements are collapsed to mean of replicated measurements
 }
 \description{
-Calculate mean of replicates based on grouping
+Calculate mean of replicates based on \code{data}. Note that the three columns \code{ReplicateID}, \code{MP_A} and \code{MP_B} must be part of \code{data} for this function to work properly. The grouping columns may have any name, but it is recommended to stick to standard names such as SampleID or Comparison
 }
 \examples{
 mean_of_replicates(data = MS_wise(sampled_eqam_measurements)[Comparison=="MP1 - MP2",])

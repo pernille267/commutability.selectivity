@@ -4,12 +4,14 @@
 \alias{approximate_variance_k}
 \title{Approximate variance of k given number of clinical samples and replicates}
 \usage{
-approximate_variance_k(n, R)
+approximate_variance_k(n, R, M = 0)
 }
 \arguments{
 \item{n}{Integer - The number of unique clinical samples}
 
 \item{R}{Integer - The number of replicated measurements done on each clinical sample}
+
+\item{M}{Double - The relative increase in prediction interval width between the case of identical selectivity profiles and any other case}
 }
 \value{
 A value that approximates the true variance of k
