@@ -11,6 +11,11 @@
 approximate_expectation_k <- function(n, R, M = 0){
   a <- 3 * n * (R - 1) / (R * (1 - 0.05 * R)) / (3 * n * (R-1) - 4)
   b <- sin(2) / (R * (1 - 0.05 * R))
-  return(((1+M)**2)*(a - b + 1))
+  if(M > 0){
+    return((cos(pi/14)*(1+M)**2)*(a - b + 1))
+  }
+  else{
+    return(a - b + 1)
+  }
 }
 

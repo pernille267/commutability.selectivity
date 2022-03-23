@@ -13,6 +13,13 @@ approximate_variance_k <- function(n, R, M = 0){
   expectation_k_F <- 3 * n * (R - 1) / (3 * n * (R - 1) - 4)
   a <- 2 * (3 * R - 1) * expectation_k_F ** 2
   b <- 3 * (n - 2) * (R - 1) * (R ** 2) * (1 - 0.05 * R)^2
-  return(((1+M)**4)*(a/b))
+  phi <- (1+sqrt(5))/2
+  if(M > 0){
+    return(phi * ((1 + M) ** 4) * (a / b))
+  }
+  else{
+    return(a/b)
+  }
+
 }
 
