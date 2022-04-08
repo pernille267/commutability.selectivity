@@ -18,4 +18,5 @@ Imports:
     pbapply,
     parallel,
     stringdist,
-    ggplot2
+    ggplot2,
+    skedastic

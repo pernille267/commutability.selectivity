@@ -11,7 +11,9 @@ Deming_Gillard_Fuller_over_groups(
   R = 3,
   Np = 1000,
   evaluated_materials = NULL,
-  column_order = c("Comparison", "SampleID", "MP_B", "MP_A", "fit", "lwr", "upr")
+  column_order = c("Comparison", "SampleID", "MP_B", "MP_A", "fit", "lwr", "upr"),
+  add_judgement = FALSE,
+  judgement_labels = c("no", "yes")
 )
 }
 \arguments{
@@ -28,6 +30,10 @@ Deming_Gillard_Fuller_over_groups(
 \item{evaluated_materials}{A data frame or data table with format LFDT enclosed with all replicated measurements for evaluated materials such as EQAMs or CRMs. Should be NULL if the PB, that is, pointwise prediction intervals to be estimated}
 
 \item{column_order}{A vector specifying the order of the columns of the outputted grouped data table. Will be ignored if evaluated_materials is NULL. Note that the length of column_order must be the same as the number of columns of output columns, which is 6 + the number of grouping columns}
+
+\item{add_judgement}{Should we include a column to the output column stating whether each evaluated material at in each group is inside the estimated prediction interval? Default is \code{FALSE}}
+
+\item{jugdement_labels}{A character vector including the labels for when EQAM is outside estimated PI (\code{FALSE}) or inside (\code{TRUE}) in that order. For example, judgement_labels = c("Not inside","inside") or judgement_labels = c("No","Yes"). Default is c("no","yes)}
 }
 \value{
 A grouped data table enclosed with information regarding the estimated prediction band across the concentration range or for the particular evaluated materials for all groups
@@ -36,7 +42,7 @@ A grouped data table enclosed with information regarding the estimated predictio
 Estimate prediction band using Deming regression formulated by J. Gillard and Fuller over groups
 }
 \details{
-This is the prediction interval estimation procedure using parts from Jonathan Gillard's PhD thesis work and Wayne Fuller's book Measurement error models. This is recommended to use over Deming_CLSI_EP14_over_groups if the calculated k value is larger than 1
+This is the prediction interval estimation procedure using parts from Jonathan Gillard's PhD thesis work and Wayne Fuller's book Measurement error models. This is recommended to use over Deming_CLSI_EP14_over_groups if k is most probably larger than 1
 }
 \examples{
 Deming_Gillard_Fuller_over_groups(MS_wise(sampled_cs_measurements), groups = "Comparison", level = 0.95, Np = 1, evaluated_materials = MS_wise(sampled_eqam_measurements))

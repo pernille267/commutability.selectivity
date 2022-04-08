@@ -39,5 +39,5 @@ Plot nice-looking plots of CS-wise precision against concentration. This functio
 If the \code{Measure} column in \code{data} is lambda, grouping colors will not be included because no groups are available. If more than one comparison is considered, \code{data} will go through the function \code{facet_wrap()}
 }
 \examples{
-plot_precision_against_concentration(data = )
+plot_precision_against_concentration(data = precision_of_replicates(MS_wise(sampled_cs_measurements)))
 }
