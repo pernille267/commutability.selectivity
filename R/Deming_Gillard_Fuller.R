@@ -12,18 +12,6 @@
 #' @examples Deming_Gillard_Fuller(data = MS_wise(sampled_cs_measurements)[Comparison=="MP1 - MP2",], level = 0.95, R = 3, evaluated_materials = NULL)
 
 Deming_Gillard_Fuller <- function(data, level = 0.99, R = 3, Np = 1e3, evaluated_materials = NULL){
-  #message(paste0("For maintainer: data's class is ",class(data)[1]))
-  if(!any(class(data)[1] == c("data.table", "data.frame", "tibble", "list", "matrix", "array"))){
-    message("For maintainer (data): data is not of correct class")
-    stop("data is not data frame or data table. Please make sure that data's class is one of the data.frame or data.table. See ?Deming_Gillard_Fuller")
-  }
-  if(!any(class(data)[1] == c("list", "matrix", "array"))){
-    warning(paste0(class(data)[1], " is the class of data. If not properly defined it may cause problems or unwanted results. I recommend you to use data.table, data.frame or tibble instead"))
-    if(is.null(colnames(data))){
-      message("For maintainer (data): column names of a matrix / array / list must not be NULL !")
-      stop("Column names of a matrix / array / list must not be NULL! Make sure they are named by given standards of LFDT")
-    }
-  }
   data <- as.data.table(data)
   R <- ceiling(R)
   Np <- ceiling(Np)

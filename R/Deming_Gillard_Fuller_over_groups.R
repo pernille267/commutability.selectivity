@@ -18,17 +18,9 @@
 #' @examples Deming_Gillard_Fuller_over_groups(MS_wise(sampled_cs_measurements), groups = "Comparison", level = 0.95, Np = 1, evaluated_materials = MS_wise(sampled_eqam_measurements))
 
 Deming_Gillard_Fuller_over_groups <- function(data, groups = "Comparison", level = 0.99, R = 3, Np = 1e3, evaluated_materials = NULL, column_order = c("Comparison", "SampleID", "MP_B", "MP_A", "fit", "lwr" , "upr"), add_judgement = FALSE, judgement_labels = c("no","yes")){
-  if(!any(class(data)[1] == c("data.frame","data.table","tibble","matrix","array","list"))){
-    message("For maintainer (data): data is not of correct class")
-    stop("data is not data frame or data table. Please make sure that data's class is one of the two")
+  if(!is.data.table(data)){
+    data <- as.data.table(data)
   }
-  if(class(data)[1] == "matrix" | class(data)[1] == "array" | class(data)[1] == "list"){
-    if(is.null(colnames(data))){
-      message("For maintainer (data): column names of a matrix / array / list must not be NULL !")
-      stop("Column names of a matrix / array / list must not be NULL! Make sure they are named by given standards of LFDT")
-    }
-  }
-  data <- as.data.table(data)
   data_list <- split(x = data, by = groups)
   if(!is.null(evaluated_materials)){
     if(!any(class(evaluated_materials)[1] == c("data.frame","data.table","tibble","matrix","array","list"))){

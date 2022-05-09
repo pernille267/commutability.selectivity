@@ -19,7 +19,7 @@ estimate_k <- function(data){
     k <- (bias*var.res)/(mpprec$Var_B + mpprec$Var_A * (b1^2))
     return(data.table(k=k))
   }
-  mod <- lm.fit(x=cbind(rep(1,N),data$MP_A),y=data$MP_B)
+  mod <- lm.fit(x=cbind(rep(1,N),data$MP_B),y=data$MP_A)
   var.res <- crossprod(x=mod$residuals,y=mod$residuals)[,]/mod$df.residual
   b1 <- mod$coefficients[2]
   bias <- (N+2)/N
